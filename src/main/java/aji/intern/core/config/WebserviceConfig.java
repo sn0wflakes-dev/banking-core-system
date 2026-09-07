@@ -12,8 +12,7 @@ import org.springframework.ws.config.annotation.WsConfigurer;
 import org.springframework.ws.server.EndpointInterceptor;
 import org.springframework.ws.transport.http.MessageDispatcherServlet;
 import org.springframework.ws.wsdl.wsdl11.DefaultWsdl11Definition;
-import org.springframework.xml.xsd.SimpleXsdSchema;
-import org.springframework.xml.xsd.XsdSchema;
+import org.springframework.xml.xsd.commons.CommonsXsdSchemaCollection;
 
 import java.util.List;
 
@@ -45,17 +44,23 @@ public class WebserviceConfig implements WsConfigurer {
     * Wsdl definition
     * */
     @Bean(name = "account")
-    public DefaultWsdl11Definition accountWsdl(XsdSchema accountSchema) {
+    public DefaultWsdl11Definition accountWsdl(CommonsXsdSchemaCollection accountSchema) {
         DefaultWsdl11Definition definition = new DefaultWsdl11Definition();
         definition.setPortTypeName("Account");
         definition.setLocationUri("/Account");
         definition.setTargetNamespace(WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE);
-        definition.setSchema(accountSchema);
+        definition.setSchemaCollection(accountSchema);
         return definition;
     }
 
     @Bean
-    public XsdSchema accountSchema() {
-        return new SimpleXsdSchema(new ClassPathResource("account.xsd"));
+    public CommonsXsdSchemaCollection accountSchema() {
+        CommonsXsdSchemaCollection schema =  new CommonsXsdSchemaCollection(
+               new ClassPathResource("account.xsd")
+        );
+
+        schema.setInline(true);
+
+        return schema;
     }
 }
