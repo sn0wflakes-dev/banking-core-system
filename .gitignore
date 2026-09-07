@@ -32,13 +32,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-### Temp ignore rule ###
-src/main/java/aji/intern/core/config/*.java
-src/main/java/aji/intern/core/controller/*.java
-src/main/java/aji/intern/core/dto/*.java
-src/main/java/aji/intern/core/entity/*.java
-src/main/java/aji/intern/core/error/*.java
-src/main/java/aji/intern/core/interceptor/*.java
-src/main/java/aji/intern/core/repository/*.java
-src/main/java/aji/intern/core/service/*.java
