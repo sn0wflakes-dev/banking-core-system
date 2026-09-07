@@ -1,0 +1,44 @@
+HELP.md
+target/
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+.env
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Temp ignore rule ###
+src/main/java/aji/intern/core/config/*.java
+src/main/java/aji/intern/core/controller/*.java
+src/main/java/aji/intern/core/dto/*.java
+src/main/java/aji/intern/core/entity/*.java
+src/main/java/aji/intern/core/error/*.java
+src/main/java/aji/intern/core/interceptor/*.java
+src/main/java/aji/intern/core/repository/*.java
+src/main/java/aji/intern/core/service/*.java
