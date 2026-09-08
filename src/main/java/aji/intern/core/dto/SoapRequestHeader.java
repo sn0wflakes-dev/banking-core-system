@@ -11,7 +11,7 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @XmlAccessorType(XmlAccessType.FIELD)
-public class RequestHeader {
+public class SoapRequestHeader {
 
     @XmlElement(name = "messageId", required = true, namespace = "")
     private String messageId;

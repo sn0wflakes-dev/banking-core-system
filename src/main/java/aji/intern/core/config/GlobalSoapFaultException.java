@@ -1,6 +1,6 @@
 package aji.intern.core.config;
 
-import aji.intern.core.dto.ResponseHeader;
+import aji.intern.core.dto.SoapResponseHeader;
 import aji.intern.core.error.ServiceException;
 import jakarta.xml.bind.JAXBElement;
 import org.apache.logging.log4j.LogManager;
@@ -59,7 +59,7 @@ public class GlobalSoapFaultException extends AbstractSoapFaultDefinitionExcepti
             responseMessage = "Internal server error, please contact support";
         }
 
-        ResponseHeader responseHeader = ResponseHeader.builder()
+        SoapResponseHeader soapResponseHeader = SoapResponseHeader.builder()
                 .responseCode(responseCode)
                 .errorOrigin(errorOrigin)
                 .responseMessage(responseMessage)
@@ -69,8 +69,8 @@ public class GlobalSoapFaultException extends AbstractSoapFaultDefinitionExcepti
         SoapFaultDetail detail = fault.addFaultDetail();
         Result result = detail.getResult();
 
-        JAXBElement<ResponseHeader> element = new JAXBElement<>(
-                new QName("", "ResponseHeader"), ResponseHeader.class, responseHeader);
+        JAXBElement<SoapResponseHeader> element = new JAXBElement<>(
+                new QName("", "ResponseHeader"), SoapResponseHeader.class, soapResponseHeader);
 
         marshaller.marshal(element, result);
     }

@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @XmlAccessorType(XmlAccessType.FIELD)
-public class ResponseHeader {
+public class SoapResponseHeader {
 
     @XmlElement(name = "responseCode", namespace = "")
     private String responseCode;

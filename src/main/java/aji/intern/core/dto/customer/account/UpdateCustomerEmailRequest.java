@@ -1,7 +1,7 @@
 package aji.intern.core.dto.customer.account;
 
 import aji.intern.core.controller.WebserviceEndpoint;
-import aji.intern.core.dto.RequestHeader;
+import aji.intern.core.dto.SoapRequestHeader;
 import jakarta.xml.bind.annotation.*;
 import lombok.*;
 
@@ -15,7 +15,7 @@ import lombok.*;
 public class UpdateCustomerEmailRequest {
 
     @XmlElement(name = "RequestHeader", namespace = "")
-    private RequestHeader header;
+    private SoapRequestHeader header;
 
     @XmlElement(name = "UpdateCustomerEmailData", namespace = "")
     private UpdateCustomerEmailData data;
