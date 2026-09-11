@@ -1,8 +1,8 @@
 package aji.intern.core.service.impl;
 
-import aji.intern.core.dto.SoapResponseHeader;
-import aji.intern.core.dto.customer.account.UpdateCustomerEmailRequest;
-import aji.intern.core.dto.customer.account.UpdateCustomerEmailResponse;
+import aji.intern.core.soap.dto.ResponseHeader;
+import aji.intern.core.soap.dto.customer.account.UpdateCustomerEmailRequest;
+import aji.intern.core.soap.dto.customer.account.UpdateCustomerEmailResponse;
 import aji.intern.core.entity.CustomerEntity;
 import aji.intern.core.error.exception.customer.CifNotFoundException;
 import aji.intern.core.repository.CustomerJpaRepository;
@@ -48,7 +48,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 
     private UpdateCustomerEmailResponse toUpdateCustomerEmailRes(String messageId, CustomerEntity entity)  {
         return UpdateCustomerEmailResponse.builder()
-                .header(SoapResponseHeader.builder()
+                .header(ResponseHeader.builder()
                         .messageId(messageId)
                         .responseCode("00")
                         .errorOrigin(null)
