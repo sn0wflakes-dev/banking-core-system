@@ -178,7 +178,7 @@
                 </executions>
                 <configuration>
                     <sources>
-                        <source>${basedir}/src/main/java/aji/intern/core/dto/customer/account</source>
+                        <source>${basedir}/src/main/java/aji/intern/core/soap/dto/customer/account</source>
                     </sources>
                     <outputDirectory>${project.build.directory}/classes</outputDirectory>
                     <transformSchemas>
