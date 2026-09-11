@@ -1,4 +1,4 @@
-package aji.intern.core.interceptor;
+package aji.intern.core.soap.interceptor;
 
 import org.apache.logging.log4j.ThreadContext;
 import org.jspecify.annotations.NonNull;

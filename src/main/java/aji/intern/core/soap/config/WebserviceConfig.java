@@ -1,7 +1,7 @@
-package aji.intern.core.config;
+package aji.intern.core.soap.config;
 
-import aji.intern.core.controller.WebserviceEndpoint;
-import aji.intern.core.interceptor.RequestIdInterceptor;
+import aji.intern.core.soap.controller.WebserviceEndpoint;
+import aji.intern.core.soap.interceptor.RequestIdInterceptor;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;

@@ -1,4 +1,4 @@
-package aji.intern.core.controller;
+package aji.intern.core.soap.controller;
 
 public interface WebserviceEndpoint {
     String NAMESPACE_ACCOUNT_SERVICE = "https://example.bank.com/AccountServices";

@@ -1,4 +1,4 @@
-package aji.intern.core.dto;
+package aji.intern.core.soap.dto;
 
 import jakarta.xml.bind.annotation.XmlAccessType;
 import jakarta.xml.bind.annotation.XmlAccessorType;
@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @XmlAccessorType(XmlAccessType.FIELD)
-public class SoapResponseHeader {
+public class ResponseHeader {
 
     @XmlElement(name = "responseCode", namespace = "")
     private String responseCode;

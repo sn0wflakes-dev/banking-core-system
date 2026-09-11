@@ -1,8 +1,8 @@
-package aji.intern.core.controller;
+package aji.intern.core.soap.controller;
 
-import aji.intern.core.dto.customer.account.ObjectFactory;
-import aji.intern.core.dto.customer.account.UpdateCustomerEmailRequest;
-import aji.intern.core.dto.customer.account.UpdateCustomerEmailResponse;
+import aji.intern.core.soap.dto.customer.account.ObjectFactory;
+import aji.intern.core.soap.dto.customer.account.UpdateCustomerEmailRequest;
+import aji.intern.core.soap.dto.customer.account.UpdateCustomerEmailResponse;
 import aji.intern.core.service.CustomerAccountService;
 import jakarta.xml.bind.JAXBElement;
 import org.apache.logging.log4j.LogManager;
