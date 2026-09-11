@@ -34,5 +34,3 @@ build/
 .vscode/
 
 ### Temp Ignore ###
-src/main/java/aji/intern/core/security
-src/main/java/aji/intern/core/dto/security

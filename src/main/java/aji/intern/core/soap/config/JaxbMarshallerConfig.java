@@ -10,7 +10,7 @@ public class JaxbMarshallerConfig {
     @Bean
     public Jaxb2Marshaller jaxb2Marshaller() {
         Jaxb2Marshaller jaxb2Marshaller = new Jaxb2Marshaller();
-        jaxb2Marshaller.setPackagesToScan("aji.intern.core.dto");
+        jaxb2Marshaller.setPackagesToScan("aji.intern.core.soap.dto");
         return jaxb2Marshaller;
     }
 
