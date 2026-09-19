@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Table(name = "CUSTOMER")
@@ -26,7 +27,7 @@ public class CustomerEntity {
     private String customerName;
 
     @Column(name = "birth_date")
-    private Date birthDate;
+    private LocalDate birthDate;
 
     @Column(name = "mobile_number")
     private String mobileNumber;

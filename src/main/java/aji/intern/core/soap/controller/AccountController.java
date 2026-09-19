@@ -1,8 +1,6 @@
 package aji.intern.core.soap.controller;
 
-import aji.intern.core.soap.dto.customer.account.ObjectFactory;
-import aji.intern.core.soap.dto.customer.account.UpdateCustomerEmailRequest;
-import aji.intern.core.soap.dto.customer.account.UpdateCustomerEmailResponse;
+import aji.intern.core.soap.dto.customer.account.*;
 import aji.intern.core.service.CustomerAccountService;
 import jakarta.xml.bind.JAXBElement;
 import org.apache.logging.log4j.LogManager;
@@ -33,4 +31,13 @@ public class AccountController {
         UpdateCustomerEmailResponse response = service.updateCustomerEmail(request.getValue());
         return objectFactory.createUpdateCustomerEmailResponse(response);
     }
+
+    @PayloadRoot(namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, localPart = "RegisterCustomerAccountRequest")
+    @ResponsePayload
+    public JAXBElement<RegisterCustomerAccountResponse> registerCustomerAccountEndpoint(
+            @RequestPayload JAXBElement<RegisterCustomerAccountRequest> request) {
+        RegisterCustomerAccountResponse response = service.registerCustomerAccount(request.getValue());
+        return objectFactory.createRegisterCustomerAccountResponse(response);
+    }
+
 }

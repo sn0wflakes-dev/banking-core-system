@@ -7,4 +7,6 @@ import java.util.Optional;
 
 public interface CustomerJpaRepository extends JpaRepository<CustomerEntity, String> {
     Optional<CustomerEntity> findByCif(String cif);
+    Optional<CustomerEntity> findByEmail(String email);
+    Optional<CustomerEntity> findByMobileNumber(String mobileNumber);
 }

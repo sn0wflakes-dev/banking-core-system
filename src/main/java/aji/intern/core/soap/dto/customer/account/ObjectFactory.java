@@ -14,6 +14,11 @@ public class ObjectFactory {
                 new QName(WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, "UpdateCustomerEmailRequest");
         QName UpdateCustomerEmailResponse =
                 new QName(WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, "UpdateCustomerEmailResponse");
+
+        QName RegisterCustomerAccountRequest =
+                new QName(WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, "RegisterCustomerAccountRequest");
+        QName RegisterCustomerAccountResponse =
+                new QName(WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, "RegisterCustomerAccountResponse");
     }
 
     @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, name = "UpdateCustomerEmailRequest")
@@ -25,5 +30,18 @@ public class ObjectFactory {
     public JAXBElement<UpdateCustomerEmailResponse> createUpdateCustomerEmailResponse(
             UpdateCustomerEmailResponse value) {
         return new JAXBElement<>(QNames.UpdateCustomerEmailResponse, UpdateCustomerEmailResponse.class, null, value);
+    }
+
+    @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, name = "RegisterCustomerAccountRequest")
+    public JAXBElement<RegisterCustomerAccountRequest> createRegisterCustomerAccountRequest(
+            RegisterCustomerAccountRequest value) {
+        return new JAXBElement<>(QNames.RegisterCustomerAccountRequest, RegisterCustomerAccountRequest.class, null, value);
+    }
+
+    @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, name = "RegisterCustomerAccountResponse")
+    public JAXBElement<RegisterCustomerAccountResponse> createRegisterCustomerAccountResponse(
+            RegisterCustomerAccountResponse value) {
+        return new JAXBElement<>(
+                QNames.RegisterCustomerAccountResponse, RegisterCustomerAccountResponse.class, null, value);
     }
 }
