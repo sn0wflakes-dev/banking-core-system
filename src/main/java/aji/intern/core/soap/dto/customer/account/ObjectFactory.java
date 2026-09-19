@@ -10,10 +10,10 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
     private interface QNames {
-        QName UpdateCustomerEmailRequest = new QName(WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE,
-                "UpdateCustomerEmailRequest");
-        QName UpdateCustomerEmailResponse = new QName(WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE,
-                "UpdateCustomerEmailResponse");
+        QName UpdateCustomerEmailRequest =
+                new QName(WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, "UpdateCustomerEmailRequest");
+        QName UpdateCustomerEmailResponse =
+                new QName(WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, "UpdateCustomerEmailResponse");
     }
 
     @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, name = "UpdateCustomerEmailRequest")
@@ -22,7 +22,8 @@ public class ObjectFactory {
     }
 
     @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, name = "UpdateCustomerEmailResponse")
-    public JAXBElement<UpdateCustomerEmailResponse> createUpdateCustomerEmailResponse(UpdateCustomerEmailResponse value) {
+    public JAXBElement<UpdateCustomerEmailResponse> createUpdateCustomerEmailResponse(
+            UpdateCustomerEmailResponse value) {
         return new JAXBElement<>(QNames.UpdateCustomerEmailResponse, UpdateCustomerEmailResponse.class, null, value);
     }
 }

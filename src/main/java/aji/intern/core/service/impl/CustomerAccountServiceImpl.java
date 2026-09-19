@@ -25,28 +25,32 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
     @Override
     public UpdateCustomerEmailResponse updateCustomerEmail(UpdateCustomerEmailRequest request) {
         // find by gcif
-        CustomerEntity customerEntity = repository.findByCif(request.getData().getGcif()).orElseThrow(
-                () -> {
-                    log.error("Failed to retrieve data : Customer with cif {} is not found",
+        CustomerEntity customerEntity = repository
+                .findByCif(request.getData().getGcif())
+                .orElseThrow(() -> {
+                    log.error(
+                            "Failed to retrieve data : Customer with cif {} is not found",
                             request.getData().getGcif());
                     return new CifNotFoundException(request.getData().getGcif());
-                }
-        );
+                });
 
         if (customerEntity.getEmail().equalsIgnoreCase(request.getData().getEmail())) {
-            log.info("Customer email is sync with updated version, cif={}", request.getData().getGcif());
+            log.info(
+                    "Customer email is sync with updated version, cif={}",
+                    request.getData().getGcif());
             return toUpdateCustomerEmailRes(request.getHeader().getMessageId(), customerEntity);
         }
 
         // set email to entity
         customerEntity.setEmail(request.getData().getEmail());
         repository.save(customerEntity);
-        log.info("Customer email updated successfully, cif={}", request.getData().getGcif());
+        log.info(
+                "Customer email updated successfully, cif={}", request.getData().getGcif());
 
         return toUpdateCustomerEmailRes(request.getHeader().getMessageId(), customerEntity);
     }
 
-    private UpdateCustomerEmailResponse toUpdateCustomerEmailRes(String messageId, CustomerEntity entity)  {
+    private UpdateCustomerEmailResponse toUpdateCustomerEmailRes(String messageId, CustomerEntity entity) {
         return UpdateCustomerEmailResponse.builder()
                 .header(ResponseHeader.builder()
                         .messageId(messageId)

@@ -27,7 +27,10 @@ public class KeyRotationController {
         this.service = service;
     }
 
-    @PostMapping(path = "/register", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(
+            path = "/register",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WebResponse<RegisterServiceResponse>> registerServiceEndpoint(
             @RequestBody RegisterServiceRequest request) {
 
@@ -43,5 +46,4 @@ public class KeyRotationController {
 
         return ResponseEntity.ok(apiRes);
     }
-
 }

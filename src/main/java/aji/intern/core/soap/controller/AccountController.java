@@ -27,7 +27,8 @@ public class AccountController {
 
     @PayloadRoot(namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, localPart = "UpdateCustomerEmailRequest")
     @ResponsePayload
-    public JAXBElement<UpdateCustomerEmailResponse> updateCustomerEmailEndpoint(@RequestPayload JAXBElement<UpdateCustomerEmailRequest> request) {
+    public JAXBElement<UpdateCustomerEmailResponse> updateCustomerEmailEndpoint(
+            @RequestPayload JAXBElement<UpdateCustomerEmailRequest> request) {
         log.debug("REQUEST IN!");
         UpdateCustomerEmailResponse response = service.updateCustomerEmail(request.getValue());
         return objectFactory.createUpdateCustomerEmailResponse(response);

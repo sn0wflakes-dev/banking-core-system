@@ -24,10 +24,7 @@ public class UpdateCustomerEmailResponse {
     @AllArgsConstructor
     @NoArgsConstructor
     @XmlAccessorType(XmlAccessType.FIELD)
-    @XmlType(
-            name = "UpdateCustomerEmailResponseData",
-            namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE
-    )
+    @XmlType(name = "UpdateCustomerEmailResponseData", namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE)
     public static class UpdateCustomerEmailData {
 
         @XmlElement(name = "gcif", namespace = "")

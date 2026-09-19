@@ -21,19 +21,19 @@ import java.util.List;
 public class WebserviceConfig implements WsConfigurer {
 
     /*
-    * Interceptor
-    * */
+     * Interceptor
+     * */
     @Override
     public void addInterceptors(List<EndpointInterceptor> interceptors) {
         interceptors.add(new RequestIdInterceptor());
     }
 
-
     /*
-    * Endpoint url mappings
-    * */
+     * Endpoint url mappings
+     * */
     @Bean
-    public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(ApplicationContext applicationContext) {
+    public ServletRegistrationBean<MessageDispatcherServlet> messageDispatcherServlet(
+            ApplicationContext applicationContext) {
         MessageDispatcherServlet servlet = new MessageDispatcherServlet();
         servlet.setApplicationContext(applicationContext);
         servlet.setTransformWsdlLocations(true);
@@ -41,8 +41,8 @@ public class WebserviceConfig implements WsConfigurer {
     }
 
     /*
-    * Wsdl definition
-    * */
+     * Wsdl definition
+     * */
     @Bean(name = "account")
     public DefaultWsdl11Definition accountWsdl(CommonsXsdSchemaCollection accountSchema) {
         DefaultWsdl11Definition definition = new DefaultWsdl11Definition();
@@ -55,9 +55,7 @@ public class WebserviceConfig implements WsConfigurer {
 
     @Bean
     public CommonsXsdSchemaCollection accountSchema() {
-        CommonsXsdSchemaCollection schema =  new CommonsXsdSchemaCollection(
-               new ClassPathResource("account.xsd")
-        );
+        CommonsXsdSchemaCollection schema = new CommonsXsdSchemaCollection(new ClassPathResource("account.xsd"));
 
         schema.setInline(true);
 

@@ -40,7 +40,8 @@ public class RequestIdInterceptor extends TransformerObjectSupport implements En
     }
 
     @Override
-    public void afterCompletion(@NonNull MessageContext messageContext, @NonNull Object endpoint, @Nullable Exception ex) throws Exception {
+    public void afterCompletion(
+            @NonNull MessageContext messageContext, @NonNull Object endpoint, @Nullable Exception ex) throws Exception {
         ThreadContext.remove(messageIdCtx);
     }
 }

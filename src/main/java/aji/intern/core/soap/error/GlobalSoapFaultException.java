@@ -69,8 +69,8 @@ public class GlobalSoapFaultException extends AbstractSoapFaultDefinitionExcepti
         SoapFaultDetail detail = fault.addFaultDetail();
         Result result = detail.getResult();
 
-        JAXBElement<ResponseHeader> element = new JAXBElement<>(
-                new QName("", "ResponseHeader"), ResponseHeader.class, responseHeader);
+        JAXBElement<ResponseHeader> element =
+                new JAXBElement<>(new QName("", "ResponseHeader"), ResponseHeader.class, responseHeader);
 
         marshaller.marshal(element, result);
     }

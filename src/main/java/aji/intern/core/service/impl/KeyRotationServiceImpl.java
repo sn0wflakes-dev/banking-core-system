@@ -27,11 +27,12 @@ public class KeyRotationServiceImpl implements KeyRotationService {
     @Override
     @Transactional
     public RegisterServiceResponse registerService(RegisterServiceRequest request) {
-        repository.findByServiceId(request.getRegisterServiceData().getServiceId()).ifPresent(
-                key -> {
-                    throw new ServiceIdAlreadyReserved(request.getRegisterServiceData().getServiceId());
-                }
-        );
+        repository
+                .findByServiceId(request.getRegisterServiceData().getServiceId())
+                .ifPresent(key -> {
+                    throw new ServiceIdAlreadyReserved(
+                            request.getRegisterServiceData().getServiceId());
+                });
 
         KeyEntity entity = new KeyEntity();
         KeyPair crypto = RsaCrypto.genKey();
@@ -42,10 +43,11 @@ public class KeyRotationServiceImpl implements KeyRotationService {
 
         repository.save(entity);
 
-        log.info("Success registering service with id {}", request.getRegisterServiceData().getServiceId());
+        log.info(
+                "Success registering service with id {}",
+                request.getRegisterServiceData().getServiceId());
 
         return toRegisterServiceRes(entity);
-
     }
 
     RegisterServiceResponse toRegisterServiceRes(KeyEntity entity) {

@@ -1,8 +1,4 @@
-@XmlSchema(
-        namespace = WebserviceEndpoint.NAMESPACE_COMMON,
-        elementFormDefault = XmlNsForm.QUALIFIED
-)
-
+@XmlSchema(namespace = WebserviceEndpoint.NAMESPACE_COMMON, elementFormDefault = XmlNsForm.QUALIFIED)
 package aji.intern.core.soap.dto;
 
 import aji.intern.core.soap.controller.WebserviceEndpoint;

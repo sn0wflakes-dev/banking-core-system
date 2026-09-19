@@ -47,14 +47,15 @@ public class RequestBodyAdvice extends RequestBodyAdviceAdapter {
         Object header = beanWrapper.getPropertyValue("requestHeader");
 
         if (header instanceof RequestHeader requestHeader) {
-            HttpServletRequest servletRequest = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+            HttpServletRequest servletRequest =
+                    ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
             servletRequest.setAttribute("messageId", requestHeader.getMessageId());
 
-            log.info("Captured MessageId from Request Header at ReqBodyAdvice : {}",
+            log.info(
+                    "Captured MessageId from Request Header at ReqBodyAdvice : {}",
                     servletRequest.getAttribute("messageId"));
         }
 
         return body;
-
     }
 }

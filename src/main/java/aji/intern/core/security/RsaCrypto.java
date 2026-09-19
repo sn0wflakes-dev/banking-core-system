@@ -20,12 +20,7 @@ public class RsaCrypto {
 
     private static final Integer RSA_KEY_SIZE = 2048;
     private static final OAEPParameterSpec OAEP_SHA256 =
-            new OAEPParameterSpec(
-                    "SHA-256",
-                    "MGF1",
-                    MGF1ParameterSpec.SHA256,
-                    PSource.PSpecified.DEFAULT
-            );
+            new OAEPParameterSpec("SHA-256", "MGF1", MGF1ParameterSpec.SHA256, PSource.PSpecified.DEFAULT);
 
     public RsaCrypto() {}
 
@@ -72,7 +67,7 @@ public class RsaCrypto {
         return Base64.getEncoder().encodeToString(privateBytes);
     }
 
-    public static  PublicKey getPublicKeyFromString(String publicKey)
+    public static PublicKey getPublicKeyFromString(String publicKey)
             throws NoSuchAlgorithmException, InvalidKeySpecException {
         byte[] decodedKey = decodeKeyFromString(publicKey);
         X509EncodedKeySpec spec = new X509EncodedKeySpec(decodedKey);
@@ -91,5 +86,4 @@ public class RsaCrypto {
     private static byte[] decodeKeyFromString(String key) {
         return Base64.getDecoder().decode(key);
     }
-
 }
