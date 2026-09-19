@@ -4,8 +4,6 @@ import aji.intern.core.rest.dto.WebResponse;
 import aji.intern.core.rest.dto.security.*;
 import aji.intern.core.service.KeyRotationService;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +15,7 @@ import java.time.Instant;
 @Controller
 @RequestMapping(path = "/api/key")
 public class KeyRotationController {
-    
+
     private final KeyRotationService service;
 
     public KeyRotationController(KeyRotationService service) {
