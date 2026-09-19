@@ -17,9 +17,7 @@ import java.time.Instant;
 @Controller
 @RequestMapping(path = "/api/key")
 public class KeyRotationController {
-
-    private static final Logger log = LogManager.getLogger(KeyRotationController.class);
-
+    
     private final KeyRotationService service;
 
     public KeyRotationController(KeyRotationService service) {
