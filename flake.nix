@@ -16,7 +16,7 @@
 
       shellHook = ''
         echo "cleaning .env file"
-        sed -i '/^[[:space:]]*$/N;/^\n$/D' .env
+        sed -i 's/\r$//' .env
 
         echo "load .env file"
         if [ -f .env ]; then

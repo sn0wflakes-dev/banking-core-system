@@ -5,7 +5,7 @@ import aji.intern.core.rest.dto.security.*;
 public interface KeyRotationService {
     RegisterServiceResponse registerService(RegisterServiceRequest request);
 
-    RetrieveKeyResponse retrieveKey();
+    RetrieveKeyResponse retrieveKey(RetrieveKeyRequest request);
 
     RotateKeyResponse rotateKey(RotateKeyRequest request);
 }

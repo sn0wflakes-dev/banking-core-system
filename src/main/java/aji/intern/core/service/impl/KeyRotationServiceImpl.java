@@ -1,5 +1,6 @@
 package aji.intern.core.service.impl;
 
+import aji.intern.core.error.exception.key.ServiceIdNotFound;
 import aji.intern.core.rest.dto.security.*;
 import aji.intern.core.entity.KeyEntity;
 import aji.intern.core.error.exception.key.ServiceIdAlreadyReserved;
@@ -58,8 +59,20 @@ public class KeyRotationServiceImpl implements KeyRotationService {
     }
 
     @Override
-    public RetrieveKeyResponse retrieveKey() {
-        return null;
+    public RetrieveKeyResponse retrieveKey(RetrieveKeyRequest request) {
+        KeyEntity entity = repository
+                .findByServiceId(request.getServiceId())
+                .orElseThrow(() -> new ServiceIdNotFound(request.getServiceId()));
+
+        log.info(
+                "Success retrieve key with service id {}",
+                request.getServiceId());
+
+        return toRetrieveKeyResponse(entity);
+    }
+
+    RetrieveKeyResponse toRetrieveKeyResponse(KeyEntity entity) {
+        return RetrieveKeyResponse.builder().key(entity.getPublicKey()).build();
     }
 
     @Override
