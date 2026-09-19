@@ -43,8 +43,7 @@ public class KeyRotationController {
                 .data(response)
                 .build();
 
-        // TODO : change response entity to return 201 created
-        return ResponseEntity.ok(apiRes);
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiRes);
     }
 
     @GetMapping(
