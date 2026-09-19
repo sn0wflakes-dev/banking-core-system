@@ -12,8 +12,8 @@
     <groupId>aji.intern</groupId>
     <artifactId>core</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>maybank-core-system</name>
-    <description>maybank-core-system</description>
+    <name>banking-core-system</name>
+    <description>banking-core-system</description>
 
     <url/>
     <licenses>
