@@ -1,14 +1,12 @@
 package aji.intern.core.rest.controller.key;
 
 import aji.intern.core.rest.dto.WebResponse;
-import aji.intern.core.rest.dto.security.RegisterServiceRequest;
-import aji.intern.core.rest.dto.security.RegisterServiceResponse;
-import aji.intern.core.rest.dto.security.RetrieveKeyRequest;
-import aji.intern.core.rest.dto.security.RetrieveKeyResponse;
+import aji.intern.core.rest.dto.security.*;
 import aji.intern.core.service.KeyRotationService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -70,5 +68,24 @@ public class KeyRotationController {
                 .build();
 
         return ResponseEntity.ok(apiRes);
+    }
+
+    @PutMapping(
+            path = "/rotate-key",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<WebResponse<RotateKeyResponse>> rotateKeyEndpoint(@RequestBody RotateKeyRequest request) {
+        RotateKeyResponse result = service.rotateKey(request);
+
+        WebResponse<RotateKeyResponse> apiResponse = WebResponse.<RotateKeyResponse>builder()
+                .header(WebResponse.ResponseHeader.builder()
+                        .messageId(request.getRequestHeader().getMessageId())
+                        .timestamp(Instant.now().toString())
+                        .build())
+                .data(result)
+                .build();
+
+        return ResponseEntity.ok(apiResponse);
     }
 }

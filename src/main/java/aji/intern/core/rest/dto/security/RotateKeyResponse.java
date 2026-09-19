@@ -1,10 +1,10 @@
 package aji.intern.core.rest.dto.security;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Builder
+@Setter
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 public class RotateKeyResponse {

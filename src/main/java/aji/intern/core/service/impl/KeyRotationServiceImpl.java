@@ -64,9 +64,7 @@ public class KeyRotationServiceImpl implements KeyRotationService {
                 .findByServiceId(request.getServiceId())
                 .orElseThrow(() -> new ServiceIdNotFound(request.getServiceId()));
 
-        log.info(
-                "Success retrieve key with service id {}",
-                request.getServiceId());
+        log.info("Success retrieve key with service id {}", request.getServiceId());
 
         return toRetrieveKeyResponse(entity);
     }
@@ -77,6 +75,28 @@ public class KeyRotationServiceImpl implements KeyRotationService {
 
     @Override
     public RotateKeyResponse rotateKey(RotateKeyRequest request) {
-        return null;
+        KeyEntity entity = repository
+                .findByServiceId(request.getRotateKeyData().getServiceId())
+                .orElseThrow(
+                        () -> new ServiceIdNotFound(request.getRotateKeyData().getServiceId()));
+
+        KeyPair crypto = RsaCrypto.genKey();
+        entity.setPrivateKey(RsaCrypto.getPrivateKeyAsBase64(crypto.getPrivate()));
+        entity.setPublicKey(RsaCrypto.getPublicKeyAsBase64(crypto.getPublic()));
+
+        repository.save(entity);
+
+        log.info(
+                "Success rotating key with service id {}",
+                request.getRotateKeyData().getServiceId());
+
+        return toRotateKeyResponse(entity);
+    }
+
+    RotateKeyResponse toRotateKeyResponse(KeyEntity entity) {
+        return RotateKeyResponse.builder()
+                .serviceId(entity.getServiceId())
+                .generatedKey(entity.getPublicKey())
+                .build();
     }
 }
