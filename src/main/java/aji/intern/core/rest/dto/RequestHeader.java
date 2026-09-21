@@ -10,7 +10,7 @@ import lombok.*;
 public class RequestHeader {
     private String messageId;
     private String serviceId;
-    private String channelId;
+    private String serviceType;
     private String sequenceNumber;
     private String transactionDate;
     private String transactionTime;
