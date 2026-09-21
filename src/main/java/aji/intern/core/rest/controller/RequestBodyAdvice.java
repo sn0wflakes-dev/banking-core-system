@@ -51,11 +51,11 @@ public class RequestBodyAdvice extends RequestBodyAdviceAdapter {
 
             String messageId = requestHeader.getMessageId();
 
-            try {
-                ThreadContext.put(messageIdCtx, messageId);
-            } finally {
-                ThreadContext.remove(messageIdCtx);
+            if (messageId == null || messageId.isBlank()) {
+                return body;
             }
+
+            ThreadContext.put(messageIdCtx, messageId);
         }
 
         return body;
