@@ -4,6 +4,6 @@ import aji.intern.core.error.ServiceException;
 
 public class ServiceIdAlreadyReserved extends ServiceException {
     public ServiceIdAlreadyReserved(String serviceId) {
-        super("12", String.format("Service with id (%s) is already reserved", serviceId), "ws", true);
+        super("09", String.format("Service with id (%s) is already reserved", serviceId), "ws", true);
     }
 }

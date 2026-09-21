@@ -4,7 +4,6 @@ import aji.intern.core.error.ServiceException;
 
 public class PhoneNumberAlreadyExist extends ServiceException {
     public PhoneNumberAlreadyExist() {
-        // conflict error code 09
         super("09", "Mobile Number already reserved by another account", "ws", true);
     }
 }
