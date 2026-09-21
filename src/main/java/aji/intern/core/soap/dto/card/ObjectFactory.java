@@ -8,20 +8,12 @@ import javax.xml.namespace.QName;
 
 public class ObjectFactory {
     private interface QNames {
-        QName RegisterCardRequest =
-                new QName(WebserviceEndpoint.NAMESPACE_CARD_SERVICE, "RegisterCardRequest");
-
         QName RegisterCardResponse =
                 new QName(WebserviceEndpoint.NAMESPACE_CARD_SERVICE, "RegisterCardResponse");
         QName ActivateCardResponse =
                 new QName(WebserviceEndpoint.NAMESPACE_CARD_SERVICE, "ActivateCardResponse");
         QName AuthCardResponse =
                 new QName(WebserviceEndpoint.NAMESPACE_CARD_SERVICE, "AuthCardResponse");
-    }
-
-    @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_CARD_SERVICE, name = "RegisterCardRequest")
-    public JAXBElement<RegisterCardRequest> createRegisterCardRequest(RegisterCardRequest value) {
-        return new JAXBElement<>(QNames.RegisterCardRequest, RegisterCardRequest.class, null, value);
     }
 
     @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_CARD_SERVICE, name = "RegisterCardRequest")

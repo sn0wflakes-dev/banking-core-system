@@ -10,13 +10,9 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
     private interface QNames {
-        QName UpdateCustomerEmailRequest =
-                new QName(WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, "UpdateCustomerEmailRequest");
         QName UpdateCustomerEmailResponse =
                 new QName(WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, "UpdateCustomerEmailResponse");
 
-        QName RegisterCustomerAccountRequest =
-                new QName(WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, "RegisterCustomerAccountRequest");
         QName RegisterCustomerAccountResponse =
                 new QName(WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, "RegisterCustomerAccountResponse");
 
@@ -24,21 +20,10 @@ public class ObjectFactory {
                 new QName(WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, "UpdatePhoneNumberResponse");
     }
 
-    @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, name = "UpdateCustomerEmailRequest")
-    public JAXBElement<UpdateCustomerEmailRequest> createUpdateCustomerEmailRequest(UpdateCustomerEmailRequest value) {
-        return new JAXBElement<>(QNames.UpdateCustomerEmailRequest, UpdateCustomerEmailRequest.class, null, value);
-    }
-
     @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, name = "UpdateCustomerEmailResponse")
     public JAXBElement<UpdateCustomerEmailResponse> createUpdateCustomerEmailResponse(
             UpdateCustomerEmailResponse value) {
         return new JAXBElement<>(QNames.UpdateCustomerEmailResponse, UpdateCustomerEmailResponse.class, null, value);
-    }
-
-    @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, name = "RegisterCustomerAccountRequest")
-    public JAXBElement<RegisterCustomerAccountRequest> createRegisterCustomerAccountRequest(
-            RegisterCustomerAccountRequest value) {
-        return new JAXBElement<>(QNames.RegisterCustomerAccountRequest, RegisterCustomerAccountRequest.class, null, value);
     }
 
     @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, name = "RegisterCustomerAccountResponse")
