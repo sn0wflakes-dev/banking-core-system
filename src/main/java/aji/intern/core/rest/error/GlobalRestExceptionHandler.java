@@ -2,6 +2,8 @@ package aji.intern.core.rest.error;
 
 import aji.intern.core.error.ServiceException;
 import aji.intern.core.error.exception.key.ServiceIdAlreadyReserved;
+import aji.intern.core.error.exception.key.ServiceIdNotFound;
+import aji.intern.core.error.exception.otp.InvalidOtp;
 import aji.intern.core.rest.dto.WebResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.logging.log4j.LogManager;
@@ -18,8 +20,44 @@ public class GlobalRestExceptionHandler {
 
     private static final Logger log = LogManager.getLogger(GlobalRestExceptionHandler.class);
 
+    @ExceptionHandler(InvalidOtp.class)
+    public ResponseEntity<WebResponse<String>> handleInvalidOtpException(ServiceException ex, HttpServletRequest http) {
+        log.error("Failed to make request. Reason : {}", ex.getMessage());
+        String messageId = (String) http.getAttribute("messageId");
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(WebResponse.<String>builder()
+                        .header(WebResponse.ResponseHeader.builder()
+                                .messageId(messageId)
+                                .timestamp(OffsetDateTime.now().toString())
+                                .build())
+                        .error(WebResponse.ErrorMessage.builder()
+                                .errorOrigin(ex.getOrigin())
+                                .responseCode(ex.getCode())
+                                .message(ex.getMessage())
+                                .build())
+                        .build());
+    }
+
+    @ExceptionHandler(ServiceIdNotFound.class)
+    public ResponseEntity<WebResponse<String>> handleNotFoundException(ServiceException ex, HttpServletRequest http) {
+        log.error("Failed to make request. Reason : {}", ex.getMessage());
+        String messageId = (String) http.getAttribute("messageId");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(WebResponse.<String>builder()
+                        .header(WebResponse.ResponseHeader.builder()
+                                .messageId(messageId)
+                                .timestamp(OffsetDateTime.now().toString())
+                                .build())
+                        .error(WebResponse.ErrorMessage.builder()
+                                .errorOrigin(ex.getOrigin())
+                                .responseCode(ex.getCode())
+                                .message(ex.getMessage())
+                                .build())
+                        .build());
+    }
+
     @ExceptionHandler(ServiceIdAlreadyReserved.class)
-    public ResponseEntity<WebResponse<String>> handleServiceException(ServiceException ex, HttpServletRequest http) {
+    public ResponseEntity<WebResponse<String>> handleConflictException(ServiceException ex, HttpServletRequest http) {
         log.error("Failed to make request. Reason : {}", ex.getMessage());
         String messageId = (String) http.getAttribute("messageId");
         return ResponseEntity.status(HttpStatus.CONFLICT)
