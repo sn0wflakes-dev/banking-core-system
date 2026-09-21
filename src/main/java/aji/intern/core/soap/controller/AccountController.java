@@ -40,4 +40,12 @@ public class AccountController {
         return objectFactory.createRegisterCustomerAccountResponse(response);
     }
 
+    @PayloadRoot(namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, localPart = "UpdatePhoneNumberRequest")
+    @ResponsePayload
+    public JAXBElement<UpdatePhoneNumberResponse> updatePhoneNumberEndpoint(
+            @RequestPayload JAXBElement<UpdatePhoneNumberRequest> request) {
+        UpdatePhoneNumberResponse response = service.updatePhoneNumber(request.getValue());
+        return objectFactory.createUpdatePhoneNumberResponse(response);
+    }
+
 }

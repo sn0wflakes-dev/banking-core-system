@@ -3,10 +3,7 @@ package aji.intern.core.service.impl;
 import aji.intern.core.error.exception.customer.EmailAlreadyExists;
 import aji.intern.core.error.exception.customer.PhoneNumberAlreadyExist;
 import aji.intern.core.soap.dto.ResponseHeader;
-import aji.intern.core.soap.dto.customer.account.RegisterCustomerAccountRequest;
-import aji.intern.core.soap.dto.customer.account.RegisterCustomerAccountResponse;
-import aji.intern.core.soap.dto.customer.account.UpdateCustomerEmailRequest;
-import aji.intern.core.soap.dto.customer.account.UpdateCustomerEmailResponse;
+import aji.intern.core.soap.dto.account.*;
 import aji.intern.core.entity.CustomerEntity;
 import aji.intern.core.error.exception.customer.CifNotFoundException;
 import aji.intern.core.repository.CustomerJpaRepository;
@@ -88,20 +85,27 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 
     @Override
     public UpdateCustomerEmailResponse updateCustomerEmail(UpdateCustomerEmailRequest request) {
-        // find by gcif
+        // find by cif
         CustomerEntity customerEntity = repository
-                .findByCif(request.getData().getGcif())
+                .findByCif(request.getData().getCif())
                 .orElseThrow(() -> {
                     log.warn(
                             "Update email failed: customer with cif {} was not found",
-                            StringUtil.maskString(request.getData().getGcif(), 18));
-                    return new CifNotFoundException(request.getData().getGcif());
+                            StringUtil.maskString(request.getData().getCif(), 18));
+                    return new CifNotFoundException(request.getData().getCif());
                 });
+
+        repository.findByEmail(request.getData().getEmail()).ifPresent(data -> {
+            log.warn(
+                    "Update email failed: email {} is already exist",
+                    request.getData().getEmail());
+            throw new EmailAlreadyExists();
+        });
 
         if (customerEntity.getEmail().equalsIgnoreCase(request.getData().getEmail())) {
             log.info(
                     "Customer email is sync with updated version, cif={}",
-                    StringUtil.maskString(request.getData().getGcif(), 18));
+                    StringUtil.maskString(request.getData().getCif(), 18));
             return toUpdateCustomerEmailRes(request.getHeader().getMessageId(), customerEntity);
         }
 
@@ -111,7 +115,7 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
 
         log.info(
                 "Update email success: customer with cif {} successfully updated",
-                StringUtil.maskString(request.getData().getGcif(), 18));
+                StringUtil.maskString(request.getData().getCif(), 18));
 
         return toUpdateCustomerEmailRes(request.getHeader().getMessageId(), customerEntity);
     }
@@ -125,9 +129,62 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
                         .responseMessage("email updated")
                         .build())
                 .data(UpdateCustomerEmailResponse.UpdateCustomerEmailData.builder()
-                        .gcif(entity.getCif())
+                        .cif(entity.getCif())
                         .updatedEmail(entity.getEmail())
                         .build())
                 .build();
     }
+
+    @Override
+    public UpdatePhoneNumberResponse updatePhoneNumber(UpdatePhoneNumberRequest request) {
+        CustomerEntity customerEntity = repository
+                .findByCif(request.getData().getCif())
+                .orElseThrow(() -> {
+                    log.warn(
+                            "Update phone number failed: customer with cif {} was not found",
+                            StringUtil.maskString(request.getData().getCif(), 18));
+                    return new CifNotFoundException(request.getData().getCif());
+                });
+
+        repository.findByMobileNumber(request.getData().getPhoneNumber()).ifPresent(
+                data -> {
+                    log.warn(
+                            "Update phone number failed: phone number {} is already exist",
+                            request.getData().getPhoneNumber());
+                    throw new PhoneNumberAlreadyExist();
+                }
+        );
+
+        if (customerEntity.getMobileNumber().equalsIgnoreCase(request.getData().getPhoneNumber())) {
+            log.info(
+                    "Customer phone number is sync with updated version, cif={}",
+                    StringUtil.maskString(request.getData().getCif(), 18));
+            return toUpdatePhoneNumberResponse(request.getHeader().getMessageId(), customerEntity);
+        }
+
+        customerEntity.setMobileNumber(request.getData().getPhoneNumber());
+        repository.save(customerEntity);
+
+        log.info(
+                "Update phone number success: customer with cif {} successfully updated",
+                StringUtil.maskString(request.getData().getCif(), 18));
+
+        return toUpdatePhoneNumberResponse(request.getHeader().getMessageId(), customerEntity);
+    }
+
+    private UpdatePhoneNumberResponse toUpdatePhoneNumberResponse(String messageId, CustomerEntity entity) {
+        return UpdatePhoneNumberResponse.builder()
+                .header(ResponseHeader.builder()
+                        .messageId(messageId)
+                        .responseCode("00")
+                        .errorOrigin(null)
+                        .responseMessage("Phone number updated successfully")
+                        .build())
+                .data(UpdatePhoneNumberResponse.UpdatePhoneNumberData.builder()
+                        .cif(entity.getCif())
+                        .updatedPhoneNumber(entity.getMobileNumber())
+                        .build())
+                .build();
+    }
+
 }
