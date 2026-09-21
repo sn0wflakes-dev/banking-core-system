@@ -14,6 +14,21 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
+/*
+* RSA Cryptography
+* This cryptographic mechanism is used to encrypt PINs at the transport layer (HTTP).
+* Each service must register to obtain its corresponding RSA key pair.
+*
+* Key Usage:
+* - The public key is retrieved by each service at startup and is used to encrypt PINs.
+* - The private key is securely stored on this server and is used to decrypt PINs.
+*
+* Cryptographic Specifications:
+* RSA key size: 2048 bits
+* Encryption padding: OAEP
+* Digest algorithm: SHA-256
+* Mask Generation Function (MGF): MGF1 with SHA-256
+*/
 public class RsaCrypto {
 
     private static final Logger log = LogManager.getLogger(RsaCrypto.class);
