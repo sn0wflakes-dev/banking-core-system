@@ -53,9 +53,28 @@ public class WebserviceConfig implements WsConfigurer {
         return definition;
     }
 
+    @Bean(name = "card")
+    public DefaultWsdl11Definition cardWsdl(CommonsXsdSchemaCollection cardSchema) {
+        DefaultWsdl11Definition definition = new DefaultWsdl11Definition();
+        definition.setPortTypeName("Card");
+        definition.setLocationUri("/Card");
+        definition.setTargetNamespace(WebserviceEndpoint.NAMESPACE_CARD_SERVICE);
+        definition.setSchemaCollection(cardSchema);
+        return definition;
+    }
+
     @Bean
     public CommonsXsdSchemaCollection accountSchema() {
         CommonsXsdSchemaCollection schema = new CommonsXsdSchemaCollection(new ClassPathResource("account.xsd"));
+
+        schema.setInline(true);
+
+        return schema;
+    }
+
+    @Bean
+    public CommonsXsdSchemaCollection cardSchema() {
+        CommonsXsdSchemaCollection schema = new CommonsXsdSchemaCollection(new ClassPathResource("card.xsd"));
 
         schema.setInline(true);
 

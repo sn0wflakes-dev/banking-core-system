@@ -91,6 +91,14 @@
             <scope>compile</scope>
         </dependency>
 
+        <!--Argon 2 Additional Dependency-->
+        <dependency>
+            <groupId>com.password4j</groupId>
+            <artifactId>password4j</artifactId>
+            <version>1.8.4</version>
+            <scope>compile</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -190,6 +198,7 @@
                 <configuration>
                     <sources>
                         <source>${basedir}/src/main/java/aji/intern/core/soap/dto/customer/account</source>
+                        <source>${basedir}/src/main/java/aji/intern/core/soap/dto/card</source>
                     </sources>
                     <outputDirectory>${project.build.directory}/classes</outputDirectory>
                     <transformSchemas>
@@ -197,6 +206,11 @@
                             <uri>https://example.bank.com/AccountServices</uri>
                             <toPrefix>account</toPrefix>
                             <toFile>account.xsd</toFile>
+                        </transformSchema>
+                        <transformSchema>
+                            <uri>https://example.bank.com/CardServices</uri>
+                            <toPrefix>card</toPrefix>
+                            <toFile>card.xsd</toFile>
                         </transformSchema>
                         <transformSchema>
                             <uri>https://example.bank.com/Commons</uri>

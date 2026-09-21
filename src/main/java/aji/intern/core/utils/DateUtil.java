@@ -13,4 +13,9 @@ public class DateUtil {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         return date.format(formatter);
     }
+
+    public static String expDateToString(LocalDate date) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/yy");
+        return date.format(formatter);
+    }
 }
