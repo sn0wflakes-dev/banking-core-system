@@ -15,20 +15,20 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 /*
-* RSA Cryptography
-* This cryptographic mechanism is used to encrypt PINs at the transport layer (HTTP).
-* Each service must register to obtain its corresponding RSA key pair.
-*
-* Key Usage:
-* - The public key is retrieved by each service at startup and is used to encrypt PINs.
-* - The private key is securely stored on this server and is used to decrypt PINs.
-*
-* Cryptographic Specifications:
-* RSA key size: 2048 bits
-* Encryption padding: OAEP
-* Digest algorithm: SHA-256
-* Mask Generation Function (MGF): MGF1 with SHA-256
-*/
+ * RSA Cryptography
+ * This cryptographic mechanism is used to encrypt PINs at the transport layer (HTTP).
+ * Each service must register to obtain its corresponding RSA key pair.
+ *
+ * Key Usage:
+ * - The public key is retrieved by each service at startup time and is used to encrypt PINs.
+ * - The private key is securely stored on this server and is used to decrypt PINs.
+ *
+ * Cryptographic Specifications:
+ * RSA key size: 2048 bits
+ * Encryption padding: OAEP
+ * Digest algorithm: SHA-256
+ * Mask Generation Function (MGF): MGF1 with SHA-256
+ */
 public class RsaCrypto {
 
     private static final Logger log = LogManager.getLogger(RsaCrypto.class);
@@ -50,15 +50,19 @@ public class RsaCrypto {
         }
     }
 
-    public static String encrypt(String pin, String key) throws Exception {
-        PublicKey publicKey = getPublicKeyFromString(key);
+    public static String encrypt(String pin, String key) {
+        try {
+            PublicKey publicKey = getPublicKeyFromString(key);
 
-        // Encrypt using RSA-OAEP
-        Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPPadding");
-        cipher.init(Cipher.ENCRYPT_MODE, publicKey, OAEP_SHA256);
+            Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPPadding");
+            cipher.init(Cipher.ENCRYPT_MODE, publicKey, OAEP_SHA256);
 
-        byte[] encryptedBytes = cipher.doFinal(pin.getBytes(StandardCharsets.UTF_8));
-        return Base64.getEncoder().encodeToString(encryptedBytes);
+            byte[] encryptedBytes = cipher.doFinal(pin.getBytes(StandardCharsets.UTF_8));
+            return Base64.getEncoder().encodeToString(encryptedBytes);
+        } catch (Exception e) {
+            log.error("Failed to encrypt content, reason : {}", e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     public static String decrypt(String base64Ciphertext, String key) {
@@ -72,6 +76,7 @@ public class RsaCrypto {
             byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
             return new String(decryptedBytes, StandardCharsets.UTF_8);
         } catch (Exception e) {
+            log.error("Failed to decrypt content, reason : {}", e.getMessage());
             throw new RuntimeException(e);
         }
     }
