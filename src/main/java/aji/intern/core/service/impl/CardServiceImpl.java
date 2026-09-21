@@ -47,7 +47,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public RegisterCardResponse registerCardService(RegisterCardRequest request) {
+    public RegisterCardResponse registerCard(RegisterCardRequest request) {
         // Check customer account first
         CustomerEntity customerEntity = customerRepository
                 .findById(request.getData().getCustomerNumber())
@@ -110,7 +110,7 @@ public class CardServiceImpl implements CardService {
     }
 
     @Override
-    public ActivateCardResponse activateCardService(ActivateCardRequest request) {
+    public ActivateCardResponse activateCard(ActivateCardRequest request) {
         CardEntity cardEntity = repository
                 .findByPan(request.getData().getCardNumber())
                 .orElseThrow(() -> {
@@ -146,7 +146,7 @@ public class CardServiceImpl implements CardService {
 
     @Transactional(readOnly = true)
     @Override
-    public AuthCardResponse authCardService(AuthCardRequest request) {
+    public AuthCardResponse authCard(AuthCardRequest request) {
         // check card number
         CardEntity cardEntity = repository
                 .findByPan(request.getData().getCardNumber())

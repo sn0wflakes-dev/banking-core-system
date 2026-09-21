@@ -102,7 +102,7 @@ public class CardServiceTest {
                 .thenAnswer(invocation -> invocation.getArgument(0, CardEntity.class));
 
         // Act
-        RegisterCardResponse result = service.registerCardService(request);
+        RegisterCardResponse result = service.registerCard(request);
 
         // Assert
         assertNotNull(result);

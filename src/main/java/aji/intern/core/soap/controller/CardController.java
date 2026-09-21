@@ -22,7 +22,7 @@ public class CardController {
     @ResponsePayload
     public JAXBElement<RegisterCardResponse> registerCardEndpoint(
             @RequestPayload JAXBElement<RegisterCardRequest> request) {
-        RegisterCardResponse response = service.registerCardService(request.getValue());
+        RegisterCardResponse response = service.registerCard(request.getValue());
         return objectFactory.createRegisterCardResponse(response);
     }
 
@@ -30,7 +30,7 @@ public class CardController {
     @ResponsePayload
     public JAXBElement<ActivateCardResponse> activateCardEndpoint(
             @RequestPayload JAXBElement<ActivateCardRequest> request) {
-        ActivateCardResponse response = service.activateCardService(request.getValue());
+        ActivateCardResponse response = service.activateCard(request.getValue());
         return objectFactory.createActivateCardResponse(response);
     }
 
@@ -38,7 +38,7 @@ public class CardController {
     @ResponsePayload
     public JAXBElement<AuthCardResponse> authCardEndpoint(
             @RequestPayload JAXBElement<AuthCardRequest> request) {
-        AuthCardResponse response = service.authCardService(request.getValue());
+        AuthCardResponse response = service.authCard(request.getValue());
         return objectFactory.createAuthCardResponse(response);
     }
 }
