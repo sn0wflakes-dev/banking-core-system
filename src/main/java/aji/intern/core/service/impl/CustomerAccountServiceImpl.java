@@ -12,11 +12,11 @@ import aji.intern.core.error.exception.customer.CifNotFoundException;
 import aji.intern.core.repository.CustomerJpaRepository;
 import aji.intern.core.service.CustomerAccountService;
 import aji.intern.core.utils.DateUtil;
+import aji.intern.core.utils.StringUtil;
+import com.github.f4b6a3.uuid.UuidCreator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
-
-import java.util.UUID;
 
 @Service
 public class CustomerAccountServiceImpl implements CustomerAccountService {
@@ -33,17 +33,23 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
     public RegisterCustomerAccountResponse registerCustomerAccount(RegisterCustomerAccountRequest request) {
         // Check existing phone number
         repository.findByMobileNumber(request.getData().getPhoneNumber()).ifPresent(data -> {
+            log.warn(
+                    "Customer registration failed: phone number {} is already exist",
+                    request.getData().getPhoneNumber());
             throw new PhoneNumberAlreadyExist();
         });
 
         // Check existing email address
         repository.findByEmail(request.getData().getEmail()).ifPresent(data -> {
+            log.warn(
+                    "Customer registration failed: email address {} is already exist",
+                    request.getData().getEmail());
             throw new EmailAlreadyExists();
         });
 
         CustomerEntity entity = CustomerEntity.builder()
-                .customerNumber(UUID.randomUUID().toString())
-                .cif(UUID.randomUUID().toString())
+                .customerNumber(UuidCreator.getTimeOrderedEpoch().toString())
+                .cif(UuidCreator.getTimeOrderedEpoch().toString())
                 .customerName(request.getData().getName())
                 .birthDate(DateUtil.stringToDate(request.getData().getBirthDate()))
                 .mobileNumber(request.getData().getPhoneNumber())
@@ -52,15 +58,15 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
                 .build();
 
         repository.save(entity);
+
         log.info(
-                "Successfully created account for {}", request.getData().getName());
+                "Card registration success: customer with number {} successfully registered",
+                StringUtil.maskString(entity.getCustomerNumber(), 18));
 
         return toRegisterCustomerAccountResponse(request.getHeader().getMessageId(), entity);
     }
 
-    private RegisterCustomerAccountResponse toRegisterCustomerAccountResponse(
-            String messageId,
-            CustomerEntity entity) {
+    private RegisterCustomerAccountResponse toRegisterCustomerAccountResponse(String messageId, CustomerEntity entity) {
         return RegisterCustomerAccountResponse.builder()
                 .header(ResponseHeader.builder()
                         .messageId(messageId)
@@ -86,24 +92,26 @@ public class CustomerAccountServiceImpl implements CustomerAccountService {
         CustomerEntity customerEntity = repository
                 .findByCif(request.getData().getGcif())
                 .orElseThrow(() -> {
-                    log.error(
-                            "Failed to retrieve data : Customer with cif {} is not found",
-                            request.getData().getGcif());
+                    log.warn(
+                            "Update email failed: customer with cif {} was not found",
+                            StringUtil.maskString(request.getData().getGcif(), 18));
                     return new CifNotFoundException(request.getData().getGcif());
                 });
 
         if (customerEntity.getEmail().equalsIgnoreCase(request.getData().getEmail())) {
             log.info(
                     "Customer email is sync with updated version, cif={}",
-                    request.getData().getGcif());
+                    StringUtil.maskString(request.getData().getGcif(), 18));
             return toUpdateCustomerEmailRes(request.getHeader().getMessageId(), customerEntity);
         }
 
         // set email to entity
         customerEntity.setEmail(request.getData().getEmail());
         repository.save(customerEntity);
+
         log.info(
-                "Customer email updated successfully, cif={}", request.getData().getGcif());
+                "Update email success: customer with cif {} successfully updated",
+                StringUtil.maskString(request.getData().getGcif(), 18));
 
         return toUpdateCustomerEmailRes(request.getHeader().getMessageId(), customerEntity);
     }
