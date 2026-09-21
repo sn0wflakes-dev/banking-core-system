@@ -3,6 +3,7 @@ package aji.intern.core.service.impl;
 import aji.intern.core.entity.CardEntity;
 import aji.intern.core.entity.CustomerEntity;
 import aji.intern.core.entity.KeyEntity;
+import aji.intern.core.error.exception.card.CardNumberNotFound;
 import aji.intern.core.error.exception.customer.CustomerNumberNotFound;
 import aji.intern.core.error.exception.key.ServiceIdNotFound;
 import aji.intern.core.helper.CardNumberBuilder;
@@ -12,8 +13,7 @@ import aji.intern.core.repository.KeyJpaRepository;
 import aji.intern.core.security.RsaCrypto;
 import aji.intern.core.service.CardService;
 import aji.intern.core.soap.dto.ResponseHeader;
-import aji.intern.core.soap.dto.card.RegisterCardRequest;
-import aji.intern.core.soap.dto.card.RegisterCardResponse;
+import aji.intern.core.soap.dto.card.*;
 import aji.intern.core.utils.DateUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -53,11 +53,14 @@ public class CardServiceImpl implements CardService {
                     .findByServiceId(request.getHeader().getServiceId())
                     .orElseThrow(() -> new ServiceIdNotFound(request.getHeader().getServiceId()));
 
-            String pin = passwordEncoder
-                    .encode(RsaCrypto.decrypt(request.getData().getPin(), key.getPrivateKey()));
+            String pin =
+                    passwordEncoder.encode(RsaCrypto.decrypt(request.getData().getPin(), key.getPrivateKey()));
 
             // init and store all information
-            String pan = new CardNumberBuilder().setBIN("411111").generateRandomAccountIdentifier().build();
+            String pan = new CardNumberBuilder()
+                    .setBIN("411111")
+                    .generateRandomAccountIdentifier()
+                    .build();
             CardEntity cardEntity = CardEntity.builder()
                     .pan(pan)
                     .pin(pin)
@@ -89,5 +92,36 @@ public class CardServiceImpl implements CardService {
                         .status(entity.getCardStatus())
                         .build())
                 .build();
+    }
+
+    @Override
+    public ActivateCardResponse activateCardService(ActivateCardRequest request) {
+        CardEntity cardEntity = repository
+                .findByPan(request.getData().getCardNumber())
+                .orElseThrow(() -> new CardNumberNotFound(request.getData().getCardNumber()));
+
+        cardEntity.setCardStatus("active");
+        repository.save(cardEntity);
+
+        return toActivateCardResponse(request.getHeader().getMessageId(), cardEntity);
+    }
+
+    private ActivateCardResponse toActivateCardResponse(String messageId, CardEntity entity) {
+        return ActivateCardResponse.builder()
+                .header(ResponseHeader.builder()
+                        .responseCode("00")
+                        .messageId(messageId)
+                        .responseMessage("Success activated card")
+                        .build())
+                .data(ActivateCardResponse.ActivateCardData.builder()
+                        .cardNumber(entity.getPan())
+                        .status(entity.getCardStatus())
+                        .build())
+                .build();
+    }
+
+    @Override
+    public AuthCardResponse authCardService(AuthCardRequest request) {
+        return null;
     }
 }

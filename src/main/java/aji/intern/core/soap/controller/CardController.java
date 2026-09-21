@@ -1,9 +1,7 @@
 package aji.intern.core.soap.controller;
 
 import aji.intern.core.service.CardService;
-import aji.intern.core.soap.dto.card.ObjectFactory;
-import aji.intern.core.soap.dto.card.RegisterCardRequest;
-import aji.intern.core.soap.dto.card.RegisterCardResponse;
+import aji.intern.core.soap.dto.card.*;
 import jakarta.xml.bind.JAXBElement;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
@@ -26,5 +24,13 @@ public class CardController {
             @RequestPayload JAXBElement<RegisterCardRequest> request) {
         RegisterCardResponse response = service.registerCardService(request.getValue());
         return objectFactory.createRegisterCardResponse(response);
+    }
+
+    @PayloadRoot(namespace = WebserviceEndpoint.NAMESPACE_CARD_SERVICE, localPart = "ActivateCardRequest")
+    @ResponsePayload
+    public JAXBElement<ActivateCardResponse> activateCardEndpoint(
+            @RequestPayload JAXBElement<ActivateCardRequest> request) {
+        ActivateCardResponse response = service.activateCardService(request.getValue());
+        return objectFactory.createActivateCardResponse(response);
     }
 }
