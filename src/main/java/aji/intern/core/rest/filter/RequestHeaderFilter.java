@@ -12,6 +12,11 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+/*
+* Request Header Filter
+* Filter used for capture custom header X-Message-ID
+* This method only works for retrieve key endpoint
+* */
 @Component
 public class RequestHeaderFilter extends OncePerRequestFilter {
     @Override
