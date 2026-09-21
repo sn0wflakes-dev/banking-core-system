@@ -1,13 +1,12 @@
 package aji.intern.core.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDate;
 
 @Table(name = "CARD")
 @Entity
@@ -23,12 +22,13 @@ public class CardEntity {
     @Column(name = "pin")
     private String pin;
 
-    @Column(name = "cif", length = 20)
-    private String cif;
-
-    @Column(name = "status", length = 1)
+    @Column(name = "status", length = 20)
     private String cardStatus;
 
-    @Column(name = "expiry_date", length = 4)
-    private String expiryDate;
+    @Column(name = "expiry_date")
+    private LocalDate expiryDate;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "customer_number", nullable = false)
+    private CustomerEntity customerEntity;
 }
