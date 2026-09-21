@@ -12,9 +12,6 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 @Endpoint
 public class AccountController {
-
-    private static final Logger log = LogManager.getLogger(AccountController.class);
-
     private final CustomerAccountService service;
     private final ObjectFactory objectFactory;
 
@@ -27,7 +24,6 @@ public class AccountController {
     @ResponsePayload
     public JAXBElement<UpdateCustomerEmailResponse> updateCustomerEmailEndpoint(
             @RequestPayload JAXBElement<UpdateCustomerEmailRequest> request) {
-        log.debug("REQUEST IN!");
         UpdateCustomerEmailResponse response = service.updateCustomerEmail(request.getValue());
         return objectFactory.createUpdateCustomerEmailResponse(response);
     }
