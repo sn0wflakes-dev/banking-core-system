@@ -2,6 +2,7 @@ package aji.intern.core.rest.controller;
 
 import aji.intern.core.rest.dto.RequestHeader;
 import jakarta.servlet.http.HttpServletRequest;
+import org.apache.logging.log4j.ThreadContext;
 import org.jspecify.annotations.NonNull;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -17,6 +18,7 @@ import java.lang.reflect.Type;
 
 @ControllerAdvice
 public class RequestBodyAdvice extends RequestBodyAdviceAdapter {
+    private static final String messageIdCtx = "messageId";
 
     @Override
     public boolean supports(
@@ -46,6 +48,14 @@ public class RequestBodyAdvice extends RequestBodyAdviceAdapter {
             HttpServletRequest servletRequest =
                     ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
             servletRequest.setAttribute("messageId", requestHeader.getMessageId());
+
+            String messageId = requestHeader.getMessageId();
+
+            try {
+                ThreadContext.put(messageIdCtx, messageId);
+            } finally {
+                ThreadContext.remove(messageIdCtx);
+            }
         }
 
         return body;
