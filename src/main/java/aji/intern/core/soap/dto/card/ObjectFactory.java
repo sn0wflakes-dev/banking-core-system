@@ -10,10 +10,13 @@ public class ObjectFactory {
     private interface QNames {
         QName RegisterCardRequest =
                 new QName(WebserviceEndpoint.NAMESPACE_CARD_SERVICE, "RegisterCardRequest");
+
         QName RegisterCardResponse =
                 new QName(WebserviceEndpoint.NAMESPACE_CARD_SERVICE, "RegisterCardResponse");
         QName ActivateCardResponse =
                 new QName(WebserviceEndpoint.NAMESPACE_CARD_SERVICE, "ActivateCardResponse");
+        QName AuthCardResponse =
+                new QName(WebserviceEndpoint.NAMESPACE_CARD_SERVICE, "AuthCardResponse");
     }
 
     @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_CARD_SERVICE, name = "RegisterCardRequest")
@@ -29,5 +32,10 @@ public class ObjectFactory {
     @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_CARD_SERVICE, name = "ActivateCardResponse")
     public JAXBElement<ActivateCardResponse> createActivateCardResponse(ActivateCardResponse value) {
         return new JAXBElement<>(QNames.ActivateCardResponse, ActivateCardResponse.class, null, value);
+    }
+
+    @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_CARD_SERVICE, name = "AuthCardResponse")
+    public JAXBElement<AuthCardResponse> createAuthCardResponse(AuthCardResponse value) {
+        return new JAXBElement<>(QNames.AuthCardResponse, AuthCardResponse.class, null, value);
     }
 }

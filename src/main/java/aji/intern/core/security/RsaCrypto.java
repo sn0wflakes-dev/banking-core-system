@@ -46,15 +46,19 @@ public class RsaCrypto {
         return Base64.getEncoder().encodeToString(encryptedBytes);
     }
 
-    public static String decrypt(String base64Ciphertext, String key) throws Exception {
-        byte[] encryptedBytes = Base64.getDecoder().decode(base64Ciphertext);
-        PrivateKey privateKey = getPrivateKeyFromString(key);
+    public static String decrypt(String base64Ciphertext, String key) {
+        try {
+            byte[] encryptedBytes = Base64.getDecoder().decode(base64Ciphertext);
+            PrivateKey privateKey = getPrivateKeyFromString(key);
 
-        Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPPadding");
-        cipher.init(Cipher.DECRYPT_MODE, privateKey, OAEP_SHA256);
+            Cipher cipher = Cipher.getInstance("RSA/ECB/OAEPPadding");
+            cipher.init(Cipher.DECRYPT_MODE, privateKey, OAEP_SHA256);
 
-        byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
-        return new String(decryptedBytes, StandardCharsets.UTF_8);
+            byte[] decryptedBytes = cipher.doFinal(encryptedBytes);
+            return new String(decryptedBytes, StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static String getPublicKeyAsBase64(PublicKey publicKey) {

@@ -33,4 +33,12 @@ public class CardController {
         ActivateCardResponse response = service.activateCardService(request.getValue());
         return objectFactory.createActivateCardResponse(response);
     }
+
+    @PayloadRoot(namespace = WebserviceEndpoint.NAMESPACE_CARD_SERVICE, localPart = "AuthCardRequest")
+    @ResponsePayload
+    public JAXBElement<AuthCardResponse> authCardEndpoint(
+            @RequestPayload JAXBElement<AuthCardRequest> request) {
+        AuthCardResponse response = service.authCardService(request.getValue());
+        return objectFactory.createAuthCardResponse(response);
+    }
 }

@@ -4,6 +4,7 @@ import aji.intern.core.entity.CardEntity;
 import aji.intern.core.entity.CustomerEntity;
 import aji.intern.core.entity.KeyEntity;
 import aji.intern.core.error.exception.card.CardNumberNotFound;
+import aji.intern.core.error.exception.card.InvalidCredential;
 import aji.intern.core.error.exception.customer.CustomerNumberNotFound;
 import aji.intern.core.error.exception.key.ServiceIdNotFound;
 import aji.intern.core.helper.CardNumberBuilder;
@@ -15,14 +16,19 @@ import aji.intern.core.service.CardService;
 import aji.intern.core.soap.dto.ResponseHeader;
 import aji.intern.core.soap.dto.card.*;
 import aji.intern.core.utils.DateUtil;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Service
 public class CardServiceImpl implements CardService {
 
+    private static final Logger log = LogManager.getLogger(CardServiceImpl.class);
     private final CardJpaRepository repository;
     private final CustomerJpaRepository customerRepository;
     private final KeyJpaRepository keyJpaRepository;
@@ -39,6 +45,10 @@ public class CardServiceImpl implements CardService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /*
+    * TODO:
+    *  Fix this service to not use try catch and move the try catch to its origin method
+    * */
     @Override
     public RegisterCardResponse registerCardService(RegisterCardRequest request) {
         try {
@@ -120,8 +130,45 @@ public class CardServiceImpl implements CardService {
                 .build();
     }
 
+    @Transactional(readOnly = true)
     @Override
     public AuthCardResponse authCardService(AuthCardRequest request) {
-        return null;
+        // check card number
+        CardEntity cardEntity =
+                repository.findByPan(request.getData().getCardNumber()).orElseThrow(InvalidCredential::new);
+
+        // decrypt and hash the password
+        KeyEntity key = keyJpaRepository
+                .findByServiceId(request.getHeader().getServiceId())
+                .orElseThrow(() -> new ServiceIdNotFound(request.getHeader().getServiceId()));
+
+        String pin = RsaCrypto.decrypt(request.getData().getPin(), key.getPrivateKey());
+
+        if (!passwordEncoder.matches(pin, cardEntity.getPin())) {
+            throw new InvalidCredential();
+        }
+
+        CardEntity entity = repository
+                .findByPanWithCustomer(request.getData().getCardNumber())
+                .orElseThrow(InvalidCredential::new);
+
+        return toAuthCardResponse(request.getHeader().getMessageId(), entity);
+    }
+
+    private AuthCardResponse toAuthCardResponse(String messageId, CardEntity entity) {
+        return AuthCardResponse.builder()
+                .header(ResponseHeader.builder()
+                        .responseCode("00")
+                        .messageId(messageId)
+                        .responseMessage("Success authenticated card")
+                        .build())
+                .data(AuthCardResponse.AuthCardData.builder()
+                        .customerNumber(entity.getCustomerEntity().getCustomerNumber())
+                        .name(entity.getCustomerEntity().getCustomerName())
+                        .address(entity.getCustomerEntity().getAddress())
+                        .cif(entity.getCustomerEntity().getCif())
+                        .cardNumber(entity.getPan())
+                        .build())
+                .build();
     }
 }
