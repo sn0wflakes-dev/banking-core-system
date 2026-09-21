@@ -2,6 +2,13 @@ package aji.intern.core.helper;
 
 import java.security.SecureRandom;
 
+/*
+* Card Number Builder
+* Used for build card number on card registration service
+* Card Number Builder utilize several libraries, such as:
+*   - SecureRandom for generating Account Identification Number
+*   - Luhn Algorithm used for adjust card validity digit number
+* */
 public class CardNumberBuilder {
     private String BIN = "";
     private String accountIdentifier = "";
