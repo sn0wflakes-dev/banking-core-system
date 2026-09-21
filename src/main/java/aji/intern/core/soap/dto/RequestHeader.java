@@ -19,8 +19,8 @@ public class RequestHeader {
     @XmlElement(name = "serviceId", namespace = "")
     private String serviceId;
 
-    @XmlElement(name = "channelId", required = true, namespace = "")
-    private String channelId;
+    @XmlElement(name = "serviceType", required = true, namespace = "")
+    private String serviceType;
 
     @XmlElement(name = "sequenceNumber", required = true, namespace = "")
     private String sequenceNumber;
