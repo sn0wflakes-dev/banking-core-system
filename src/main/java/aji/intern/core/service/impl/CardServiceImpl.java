@@ -16,6 +16,7 @@ import aji.intern.core.service.CardService;
 import aji.intern.core.soap.dto.ResponseHeader;
 import aji.intern.core.soap.dto.card.*;
 import aji.intern.core.utils.DateUtil;
+import aji.intern.core.utils.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,12 +24,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.Objects;
 
 @Service
 public class CardServiceImpl implements CardService {
 
     private static final Logger log = LogManager.getLogger(CardServiceImpl.class);
+
     private final CardJpaRepository repository;
     private final CustomerJpaRepository customerRepository;
     private final KeyJpaRepository keyJpaRepository;
@@ -45,46 +46,50 @@ public class CardServiceImpl implements CardService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    /*
-    * TODO:
-    *  Fix this service to not use try catch and move the try catch to its origin method
-    * */
     @Override
     public RegisterCardResponse registerCardService(RegisterCardRequest request) {
-        try {
-            // Check customer account first
-            CustomerEntity customerEntity = customerRepository
-                    .findById(request.getData().getCustomerNumber())
-                    .orElseThrow(
-                            () -> new CustomerNumberNotFound(request.getData().getCustomerNumber()));
+        // Check customer account first
+        CustomerEntity customerEntity = customerRepository
+                .findById(request.getData().getCustomerNumber())
+                .orElseThrow(() -> {
+                    log.warn(
+                            "Card registration failed: customer with number {} was not found",
+                            request.getData().getCustomerNumber());
+                    return new CustomerNumberNotFound(request.getData().getCustomerNumber());
+                });
 
-            // decrypt and hash the password
-            KeyEntity key = keyJpaRepository
-                    .findByServiceId(request.getHeader().getServiceId())
-                    .orElseThrow(() -> new ServiceIdNotFound(request.getHeader().getServiceId()));
+        // decrypt and hash the password
+        KeyEntity key = keyJpaRepository
+                .findByServiceId(request.getHeader().getServiceId())
+                .orElseThrow(() -> {
+                    log.warn(
+                            "Card registration failed: service with id {} was not found",
+                            request.getHeader().getServiceId());
+                    return new ServiceIdNotFound(request.getHeader().getServiceId());
+                });
 
-            String pin =
-                    passwordEncoder.encode(RsaCrypto.decrypt(request.getData().getPin(), key.getPrivateKey()));
+        String pin = passwordEncoder.encode(RsaCrypto.decrypt(request.getData().getPin(), key.getPrivateKey()));
 
-            // init and store all information
-            String pan = new CardNumberBuilder()
-                    .setBIN("411111")
-                    .generateRandomAccountIdentifier()
-                    .build();
-            CardEntity cardEntity = CardEntity.builder()
-                    .pan(pan)
-                    .pin(pin)
-                    .cardStatus("inactive")
-                    .expiryDate(LocalDate.now().plusYears(5))
-                    .customerEntity(customerEntity)
-                    .build();
+        // init and store all information
+        String pan = new CardNumberBuilder()
+                .setBIN("411111")
+                .generateRandomAccountIdentifier()
+                .build();
+        CardEntity cardEntity = CardEntity.builder()
+                .pan(pan)
+                .pin(pin)
+                .cardStatus("inactive")
+                .expiryDate(LocalDate.now().plusYears(5))
+                .customerEntity(customerEntity)
+                .build();
 
-            repository.save(cardEntity);
+        repository.save(cardEntity);
 
-            return toRegisterCardResponse(request.getHeader().getMessageId(), cardEntity);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        log.info(
+                "Card registration success: card with number {} successfully registered",
+                StringUtil.maskString(pan, 8));
+
+        return toRegisterCardResponse(request.getHeader().getMessageId(), cardEntity);
     }
 
     private RegisterCardResponse toRegisterCardResponse(String messageId, CardEntity entity) {
@@ -108,10 +113,19 @@ public class CardServiceImpl implements CardService {
     public ActivateCardResponse activateCardService(ActivateCardRequest request) {
         CardEntity cardEntity = repository
                 .findByPan(request.getData().getCardNumber())
-                .orElseThrow(() -> new CardNumberNotFound(request.getData().getCardNumber()));
+                .orElseThrow(() -> {
+                    log.warn(
+                            "Card activation failed: card with number {} was not found",
+                            StringUtil.maskString(request.getData().getCardNumber(), 8));
+                    return new CardNumberNotFound(request.getData().getCardNumber());
+                });
 
         cardEntity.setCardStatus("active");
         repository.save(cardEntity);
+
+        log.info(
+                "Card activation success: card with number {} successfully activated",
+                StringUtil.maskString(request.getData().getCardNumber(), 8));
 
         return toActivateCardResponse(request.getHeader().getMessageId(), cardEntity);
     }
@@ -134,23 +148,41 @@ public class CardServiceImpl implements CardService {
     @Override
     public AuthCardResponse authCardService(AuthCardRequest request) {
         // check card number
-        CardEntity cardEntity =
-                repository.findByPan(request.getData().getCardNumber()).orElseThrow(InvalidCredential::new);
+        CardEntity cardEntity = repository
+                .findByPan(request.getData().getCardNumber())
+                .orElseThrow(() -> {
+                    log.warn(
+                            "Card authentication failed: card with number {} was not found",
+                            StringUtil.maskString(request.getData().getCardNumber(), 8));
+                    return new InvalidCredential();
+                });
 
         // decrypt and hash the password
         KeyEntity key = keyJpaRepository
                 .findByServiceId(request.getHeader().getServiceId())
-                .orElseThrow(() -> new ServiceIdNotFound(request.getHeader().getServiceId()));
+                .orElseThrow(() -> {
+                    log.warn(
+                            "Card authentication failed: service with id {} was not found",
+                            request.getHeader().getServiceId());
+                    return new ServiceIdNotFound(request.getHeader().getServiceId());
+                });
 
         String pin = RsaCrypto.decrypt(request.getData().getPin(), key.getPrivateKey());
 
         if (!passwordEncoder.matches(pin, cardEntity.getPin())) {
+            log.warn(
+                    "Card authentication failed: PIN is invalid with card number : {}",
+                    StringUtil.maskString(request.getData().getCardNumber(), 8));
             throw new InvalidCredential();
         }
 
         CardEntity entity = repository
                 .findByPanWithCustomer(request.getData().getCardNumber())
                 .orElseThrow(InvalidCredential::new);
+
+        log.info(
+                "Card authentication success: card with number {} successfully authenticated",
+                StringUtil.maskString(request.getData().getCardNumber(), 8));
 
         return toAuthCardResponse(request.getHeader().getMessageId(), entity);
     }
