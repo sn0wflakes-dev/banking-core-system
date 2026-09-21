@@ -27,8 +27,8 @@ public class UpdateCustomerEmailResponse {
     @XmlType(name = "UpdateCustomerEmailResponseData", namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE)
     public static class UpdateCustomerEmailData {
 
-        @XmlElement(name = "gcif", namespace = "")
-        private String gcif;
+        @XmlElement(name = "cif", namespace = "")
+        private String cif;
 
         @XmlElement(name = "updatedEmail", namespace = "")
         private String updatedEmail;
