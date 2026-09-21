@@ -9,6 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 public class RequestHeader {
     private String messageId;
+    private String serviceId;
     private String channelId;
     private String sequenceNumber;
     private String transactionDate;
