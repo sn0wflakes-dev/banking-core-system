@@ -85,7 +85,7 @@ public class CardServiceTest {
                 .header(RequestHeader.builder()
                         .messageId(UUID.randomUUID().toString())
                         .serviceId(serviceId)
-                        .channelId("IVR")
+                        .serviceType("IVR")
                         .sequenceNumber("0101230")
                         .transactionDate("02:10:2023")
                         .transactionTime("02:20:39")

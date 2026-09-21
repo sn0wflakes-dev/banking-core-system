@@ -7,6 +7,7 @@ import aji.intern.core.error.exception.key.ServiceIdAlreadyReserved;
 import aji.intern.core.repository.KeyJpaRepository;
 import aji.intern.core.security.RsaCrypto;
 import aji.intern.core.service.KeyRotationService;
+import aji.intern.core.utils.StringUtil;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,9 @@ public class KeyRotationServiceImpl implements KeyRotationService {
         repository
                 .findByServiceId(request.getRegisterServiceData().getServiceId())
                 .ifPresent(key -> {
+                    log.warn(
+                            "Service registration failed: service id {} is already exist",
+                            request.getRegisterServiceData().getServiceId());
                     throw new ServiceIdAlreadyReserved(
                             request.getRegisterServiceData().getServiceId());
                 });
@@ -45,7 +49,7 @@ public class KeyRotationServiceImpl implements KeyRotationService {
         repository.save(entity);
 
         log.info(
-                "Success registering service with id {}",
+                "Service registration success: service with id {} successfully registered",
                 request.getRegisterServiceData().getServiceId());
 
         return toRegisterServiceRes(entity);
@@ -62,9 +66,16 @@ public class KeyRotationServiceImpl implements KeyRotationService {
     public RetrieveKeyResponse retrieveKey(RetrieveKeyRequest request) {
         KeyEntity entity = repository
                 .findByServiceId(request.getServiceId())
-                .orElseThrow(() -> new ServiceIdNotFound(request.getServiceId()));
+                .orElseThrow(() -> {
+                    log.warn(
+                            "Retrieve service id failed: service with id {} was not found",
+                            request.getServiceId());
+                    return new ServiceIdNotFound(request.getServiceId());
+                });
 
-        log.info("Success retrieve key with service id {}", request.getServiceId());
+        log.info(
+                "Retrieve service id success: service id {} successfully retrieved",
+                request.getServiceId());
 
         return toRetrieveKeyResponse(entity);
     }
@@ -78,16 +89,21 @@ public class KeyRotationServiceImpl implements KeyRotationService {
         KeyEntity entity = repository
                 .findByServiceId(request.getRotateKeyData().getServiceId())
                 .orElseThrow(
-                        () -> new ServiceIdNotFound(request.getRotateKeyData().getServiceId()));
+                        () -> {
+                            log.warn(
+                                    "Rotate key failed: service with id {} was not found",
+                                    request.getRotateKeyData().getServiceId());
+                            return new ServiceIdNotFound(request.getRotateKeyData().getServiceId());
+                        });
 
         KeyPair crypto = RsaCrypto.genKey();
         entity.setPrivateKey(RsaCrypto.getPrivateKeyAsBase64(crypto.getPrivate()));
         entity.setPublicKey(RsaCrypto.getPublicKeyAsBase64(crypto.getPublic()));
 
         repository.save(entity);
-
+        
         log.info(
-                "Success rotating key with service id {}",
+                "Rotate key success: key with service id {} successfully rotated",
                 request.getRotateKeyData().getServiceId());
 
         return toRotateKeyResponse(entity);
