@@ -1,5 +1,5 @@
 @XmlSchema(namespace = WebserviceEndpoint.NAMESPACE_ACCOUNT_SERVICE, elementFormDefault = XmlNsForm.QUALIFIED)
-package aji.intern.core.soap.dto.customer.account;
+package aji.intern.core.soap.dto.account;
 
 import aji.intern.core.soap.controller.WebserviceEndpoint;
 import jakarta.xml.bind.annotation.XmlNsForm;

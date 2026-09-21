@@ -1,4 +1,4 @@
-package aji.intern.core.soap.dto.customer.account;
+package aji.intern.core.soap.dto.account;
 
 import aji.intern.core.soap.controller.WebserviceEndpoint;
 import aji.intern.core.soap.dto.RequestHeader;

@@ -1,6 +1,6 @@
 package aji.intern.core.soap.controller;
 
-import aji.intern.core.soap.dto.customer.account.*;
+import aji.intern.core.soap.dto.account.*;
 import aji.intern.core.service.CustomerAccountService;
 import jakarta.xml.bind.JAXBElement;
 import org.apache.logging.log4j.LogManager;
