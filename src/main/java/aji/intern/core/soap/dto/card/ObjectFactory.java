@@ -3,9 +3,11 @@ package aji.intern.core.soap.dto.card;
 import aji.intern.core.soap.controller.WebserviceEndpoint;
 import jakarta.xml.bind.JAXBElement;
 import jakarta.xml.bind.annotation.XmlElementDecl;
+import jakarta.xml.bind.annotation.XmlRegistry;
 
 import javax.xml.namespace.QName;
 
+@XmlRegistry
 public class ObjectFactory {
     private interface QNames {
         QName RegisterCardResponse =
@@ -16,7 +18,7 @@ public class ObjectFactory {
                 new QName(WebserviceEndpoint.NAMESPACE_CARD_SERVICE, "AuthCardResponse");
     }
 
-    @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_CARD_SERVICE, name = "RegisterCardRequest")
+    @XmlElementDecl(namespace = WebserviceEndpoint.NAMESPACE_CARD_SERVICE, name = "RegisterCardResponse")
     public JAXBElement<RegisterCardResponse> createRegisterCardResponse(RegisterCardResponse value) {
         return new JAXBElement<>(QNames.RegisterCardResponse, RegisterCardResponse.class, null, value);
     }
