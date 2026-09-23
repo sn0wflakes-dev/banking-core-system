@@ -65,7 +65,6 @@ public class KeyRotationController {
     }
 
     @PutMapping(
-            path = "/rotate-key",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
