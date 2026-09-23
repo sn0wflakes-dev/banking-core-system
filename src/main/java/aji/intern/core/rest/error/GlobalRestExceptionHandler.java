@@ -22,7 +22,7 @@ public class GlobalRestExceptionHandler {
 
     @ExceptionHandler(InvalidOtp.class)
     public ResponseEntity<WebResponse<String>> handleInvalidOtpException(ServiceException ex, HttpServletRequest http) {
-        log.error("Failed to make request. Reason : {}", ex.getMessage());
+        log.warn("Failed to make request. Reason : {}", ex.getMessage());
         String messageId = (String) http.getAttribute("messageId");
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                 .body(WebResponse.<String>builder()
@@ -40,7 +40,7 @@ public class GlobalRestExceptionHandler {
 
     @ExceptionHandler(ServiceIdNotFound.class)
     public ResponseEntity<WebResponse<String>> handleNotFoundException(ServiceException ex, HttpServletRequest http) {
-        log.error("Failed to make request. Reason : {}", ex.getMessage());
+        log.warn("Failed to make request. Reason : {}", ex.getMessage());
         String messageId = (String) http.getAttribute("messageId");
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(WebResponse.<String>builder()
@@ -58,7 +58,7 @@ public class GlobalRestExceptionHandler {
 
     @ExceptionHandler(ServiceIdAlreadyReserved.class)
     public ResponseEntity<WebResponse<String>> handleConflictException(ServiceException ex, HttpServletRequest http) {
-        log.error("Failed to make request. Reason : {}", ex.getMessage());
+        log.warn("Failed to make request. Reason : {}", ex.getMessage());
         String messageId = (String) http.getAttribute("messageId");
         return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(WebResponse.<String>builder()
