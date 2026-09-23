@@ -23,7 +23,6 @@ public class KeyRotationController {
     }
 
     @PostMapping(
-            path = "/register",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WebResponse<RegisterServiceResponse>> registerServiceEndpoint(
@@ -82,5 +81,24 @@ public class KeyRotationController {
                 .build();
 
         return ResponseEntity.ok(apiResponse);
+    }
+
+    @DeleteMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<WebResponse<RemoveServiceKeyResponse>> removeServiceEndpoint(
+            @RequestBody RemoveServiceKeyRequest request) {
+
+        RemoveServiceKeyResponse response = service.removeKey(request);
+
+        WebResponse<RemoveServiceKeyResponse> apiRes = WebResponse.<RemoveServiceKeyResponse>builder()
+                .header(WebResponse.ResponseHeader.builder()
+                        .messageId(request.getRequestHeader().getMessageId())
+                        .timestamp(Instant.now().toString())
+                        .build())
+                .data(response)
+                .build();
+
+        return ResponseEntity.ok().body(apiRes);
     }
 }

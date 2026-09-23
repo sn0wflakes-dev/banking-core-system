@@ -115,4 +115,31 @@ public class KeyRotationServiceImpl implements KeyRotationService {
                 .generatedKey(entity.getPublicKey())
                 .build();
     }
+
+    @Override
+    public RemoveServiceKeyResponse removeKey(RemoveServiceKeyRequest request) {
+        KeyEntity entity = repository
+                .findByServiceId(request.getRemoveServiceData().getServiceId())
+                .orElseThrow(
+                        () -> {
+                            log.warn(
+                                    "Remove key failed: service with id {} was not found",
+                                    request.getRemoveServiceData().getServiceId());
+                            return new ServiceIdNotFound(request.getRemoveServiceData().getServiceId());
+                        });
+
+        repository.delete(entity);
+
+        log.info(
+                "Remove key success: key with service id {} successfully removed",
+                request.getRemoveServiceData().getServiceId());
+
+        return toRemoveKeyResponse(request.getRemoveServiceData().getServiceId());
+    }
+
+    private RemoveServiceKeyResponse toRemoveKeyResponse(String serviceId) {
+        return RemoveServiceKeyResponse.builder()
+                .serviceId(serviceId)
+                .build();
+    }
 }

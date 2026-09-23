@@ -6,4 +6,5 @@ public interface KeyRotationService {
     RegisterServiceResponse registerService(RegisterServiceRequest request);
     RetrieveKeyResponse retrieveKey(RetrieveKeyRequest request);
     RotateKeyResponse rotateKey(RotateKeyRequest request);
+    RemoveServiceKeyResponse removeKey(RemoveServiceKeyRequest request);
 }
