@@ -1,6 +1,7 @@
 package aji.intern.core.rest.error;
 
 import aji.intern.core.error.ServiceException;
+import aji.intern.core.error.exception.customer.CifNotFoundException;
 import aji.intern.core.error.exception.key.ServiceIdAlreadyReserved;
 import aji.intern.core.error.exception.key.ServiceIdNotFound;
 import aji.intern.core.error.exception.otp.InvalidOtp;
@@ -58,6 +59,24 @@ public class GlobalRestExceptionHandler {
 
     @ExceptionHandler(ServiceIdAlreadyReserved.class)
     public ResponseEntity<WebResponse<String>> handleConflictException(ServiceException ex, HttpServletRequest http) {
+        log.warn("Failed to make request. Reason : {}", ex.getMessage());
+        String messageId = (String) http.getAttribute("messageId");
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(WebResponse.<String>builder()
+                        .header(WebResponse.ResponseHeader.builder()
+                                .messageId(messageId)
+                                .timestamp(OffsetDateTime.now().toString())
+                                .build())
+                        .error(WebResponse.ErrorMessage.builder()
+                                .errorOrigin(ex.getOrigin())
+                                .responseCode(ex.getCode())
+                                .message(ex.getMessage())
+                                .build())
+                        .build());
+    }
+
+    @ExceptionHandler(CifNotFoundException.class)
+    public ResponseEntity<WebResponse<String>> handleCifNotFoundException(ServiceException ex, HttpServletRequest http) {
         log.warn("Failed to make request. Reason : {}", ex.getMessage());
         String messageId = (String) http.getAttribute("messageId");
         return ResponseEntity.status(HttpStatus.CONFLICT)
